@@ -1,0 +1,37 @@
+[
+  {
+    "User": "Favas Muhammed Sakkeer",
+    "department": "IT",
+    "postType": "Project Update",
+    "content": {
+      "title": "New Product on the way",
+      "body": "We're making great strides in our new In-Company social media. Here's a quick update on our progress and next steps.",
+      "attachments": [
+        {
+          "type": "image",
+          "url": "https://www.pexels.com/photo/photo-of-people-using-laptop-3194519/"
+        }
+      ]
+    },
+    "tags": ["it", "social", "media"],
+    "interactions": {
+      "likes": 15,
+      "comments": [
+        {
+          "User": "Antoine",
+          "department": "CEO",
+          "comment": "Great work!",
+          "timestamp": "2024-10-15T14:30:00Z"
+        },
+        {
+          "User": "Karine",
+          "department": "B2B Europe TL",
+          "comment": "Exciting progress!",
+          "timestamp": "2024-10-15T15:45:00Z"
+        }
+      ]
+    },
+    "timestamp": "2024-10-15T13:00:00Z",
+    "visibility": "All Departments"
+  }
+]

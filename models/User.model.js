@@ -1,5 +1,3 @@
-const { Schema, model } = require('mongoose')
-
 const userSchema = new Schema(
   {
     username: {
@@ -9,15 +7,24 @@ const userSchema = new Schema(
       trim: true,
       lowercase: true,
     },
-    email: { type: String, required: true, trim: true, lowercase: true },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+      validate: {
+        validator: function (v) {
+          return v.endsWith("@thebrandcollector.com");
+        },
+        message: (props) => `${props.value} is not a valid company email!`,
+      },
+    },
     passwordHash: { type: String, required: true },
+    // additional fields if needed.
   },
-  {
-    // this second object adds extra properties: `createdAt` and `updatedAt`
-    timestamps: true,
-  }
-)
+  { timestamps: true }
+);
 
-const User = model('User', userSchema)
+const User = model("User", userSchema);
 
-module.exports = User
+module.exports = User;

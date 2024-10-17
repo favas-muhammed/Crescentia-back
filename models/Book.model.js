@@ -1,4 +1,4 @@
-const { Schema, model, Types } = require('mongoose')
+/*const { Schema, model, Types } = require('mongoose')
 
 // TODO: Please make sure you edit the Book model to whatever makes sense in this case
 const bookSchema = new Schema(
@@ -31,3 +31,4 @@ const bookSchema = new Schema(
 const Book = model('Book', bookSchema)
 
 module.exports = Book
+*/
