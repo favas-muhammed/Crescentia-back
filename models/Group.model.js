@@ -1,12 +1,14 @@
-const { Schema, model, Types } = require("mongoose");
+const mongoose = require("mongoose");
 
-const groupSchema = new Schema(
+const groupSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    members: [{ type: Types.ObjectId, ref: "User" }],
-    posts: [{ type: Types.ObjectId, ref: "Post" }],
+    description: String,
+    members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    admins: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
   },
   { timestamps: true }
 );
 
-module.exports = model("Group", groupSchema);
+module.exports = mongoose.model("Group", groupSchema);
