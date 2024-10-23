@@ -47,8 +47,10 @@ router.get("/:postId", isAuthenticated, async (req, res, next) => {
 // Update a post
 router.put("/:postId", isAuthenticated, async (req, res, next) => {
   try {
-    const updatedPost = await Post.findOneAndUpdate(
-      { _id: req.params.postId, author: req.tokenPayload.userId },
+    const { userId } = req.tokenPayload;
+    //add check to make sure logged user is owner of the post
+    const updatedPost = await Post.findByIdAndUpdate(
+      req.params.postId,
       req.body,
       { new: true }
     );
@@ -75,7 +77,7 @@ router.delete("/:postId", isAuthenticated, async (req, res, next) => {
         .status(404)
         .json({ message: "Post not found or you are not the author" });
     }
-    res.status(204).send();
+    res.status(204).json();
   } catch (error) {
     next(error);
   }

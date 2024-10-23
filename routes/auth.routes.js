@@ -11,6 +11,7 @@ const router = require("express").Router();
 // POST Signup
 router.post("/signup", async (req, res, next) => {
   const { username, email, password } = req.body;
+  console.log(username, email, password);
   if (!email.endsWith("@thebrandcollector.com")) {
     return res.status(400).json({ message: "Invalid company email" });
   }
@@ -23,6 +24,7 @@ router.post("/signup", async (req, res, next) => {
     const newUser = await User.create(userToCreate);
     res.status(201).json(newUser);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 });
