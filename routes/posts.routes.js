@@ -54,7 +54,9 @@ router.post(
 // Get all posts
 router.get("/", isAuthenticated, async (req, res, next) => {
   try {
-    const posts = await Post.find().populate("author", "username");
+    const posts = await Post.find()
+      .populate("author", "username")
+      .sort({ createdAt: -1 });
     res.status(200).json(posts);
   } catch (error) {
     next(error);
@@ -92,9 +94,9 @@ router.put("/:postId", isAuthenticated, async (req, res, next) => {
     }
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.postId,
-      req.body,
+      { content: req.body.content },
       { new: true }
-    );
+    ).populate("author", "username");
     res.status(200).json(updatedPost);
   } catch (error) {
     next(error);
@@ -114,7 +116,7 @@ router.delete("/:postId", isAuthenticated, async (req, res, next) => {
         .status(404)
         .json({ message: "Post not found or you are not the author" });
     }
-    res.status(204).json();
+    res.status(200).json({ message: "Post deleted successfully" });
   } catch (error) {
     next(error);
   }

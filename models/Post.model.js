@@ -7,7 +7,7 @@ const postSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    content: { type: String },
+    content: { type: String, required: true },
     mediaType: {
       type: String,
       enum: ["image", "video", "none"],
