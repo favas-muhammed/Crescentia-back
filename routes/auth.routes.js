@@ -6,8 +6,6 @@ const { isAuthenticated } = require("../middlewares/route-guard.middleware");
 
 const router = require("express").Router();
 
-// All routes are gonna start with /auth
-
 // POST Signup
 router.post("/signup", async (req, res, next) => {
   const { username, email, password } = req.body;
