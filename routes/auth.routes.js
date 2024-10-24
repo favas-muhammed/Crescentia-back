@@ -31,34 +31,37 @@ router.post("/signup", async (req, res, next) => {
 
 // POST Login
 router.post("/login", async (req, res, next) => {
-  // Look for a user by it's username
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res
+      .status(400)
+      .json({ message: "Please provide both email and password" });
+  }
+
   try {
-    const potentialUser = await User.findOne({ username: req.body.username });
-    if (potentialUser) {
-      // User exists
-      // Check the password
-      if (bcrypt.compareSync(req.body.password, potentialUser.passwordHash)) {
-        // Password is correct
-        const authToken = jwt.sign(
-          { userId: potentialUser._id },
-          process.env.TOKEN_SECRET,
-          {
-            algorithm: "HS256",
-            expiresIn: "6h",
-          }
-        );
-        res.json({ token: authToken });
-      } else {
-        res.status(401).json({ message: "Incorrect password" });
-      }
-    } else {
-      res.status(404).json({ message: "No user with this username" });
+    const user = await User.findOne({ email: email });
+
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
     }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.passwordHash);
+
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    const authToken = jwt.sign({ userId: user._id }, process.env.TOKEN_SECRET, {
+      algorithm: "HS256",
+      expiresIn: "6h",
+    });
+
+    res.json({ token: authToken });
   } catch (error) {
     next(error);
   }
 });
-
 // Verify
 router.get("/verify", isAuthenticated, async (req, res, next) => {
   try {
