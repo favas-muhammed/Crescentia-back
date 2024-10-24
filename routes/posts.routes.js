@@ -79,7 +79,7 @@ router.get("/:postId", isAuthenticated, async (req, res, next) => {
   }
 });
 
-// Update a post
+// Update any post
 router.put("/:postId", isAuthenticated, async (req, res, next) => {
   try {
     const { userId } = req.tokenPayload;
