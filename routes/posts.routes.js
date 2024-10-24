@@ -36,6 +36,7 @@ router.post(
           : "video"
         : "none";
 */
+      console.log("body", req.body);
       const newPost = await Post.create({
         content: req.body.content,
         // mediaUrl: req.file ? `/uploads/${req.file.filename}` : null,
