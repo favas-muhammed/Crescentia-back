@@ -1,11 +1,10 @@
 const router = require("express").Router();
 const Post = require("../models/Post.model");
-const multer = require("multer");
 const path = require("path");
 const { isAuthenticated } = require("../middlewares/route-guard.middleware");
 
 // Configure multer for file storage
-const storage = multer.diskStorage({
+/*const storage = multer.diskStorage({
   destination: "./uploads/",
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
@@ -22,25 +21,25 @@ const upload = multer({
       cb(null, false);
     }
   },
-});
+});*/
 
 // Create post with media
 router.post(
   "/",
   isAuthenticated,
-  upload.single("media"),
+  //upload.single("media"),
   async (req, res, next) => {
     try {
-      const mediaType = req.file
+      /*const mediaType = req.file
         ? req.file.mimetype.startsWith("image/")
           ? "image"
           : "video"
         : "none";
-
+*/
       const newPost = await Post.create({
         content: req.body.content,
-        mediaUrl: req.file ? `/uploads/${req.file.filename}` : null,
-        mediaType,
+        // mediaUrl: req.file ? `/uploads/${req.file.filename}` : null,
+        //mediaType,
         author: req.tokenPayload.userId,
       });
 

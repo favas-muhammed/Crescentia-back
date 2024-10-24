@@ -8,12 +8,12 @@ const postSchema = new mongoose.Schema(
       required: true,
     },
     content: { type: String, required: true },
-    mediaType: {
+    /*mediaType: {
       type: String,
       enum: ["image", "video", "none"],
       default: "none",
     },
-    mediaUrl: String,
+    mediaUrl: String,*/
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
   },
