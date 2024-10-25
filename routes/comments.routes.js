@@ -61,34 +61,32 @@ router.put(
 );
 
 // Delete a comment
-router.delete(
-  "/:postId/comments/:commentId",
-  isAuthenticated,
-  async (req, res, next) => {
-    try {
-      const { postId, commentId } = req.params;
-      const comment = await Comment.findById(commentId);
+const deleteComment = async (req, res, next) => {
+  try {
+    const { postId, commentId } = req.params;
+    const comment = await Comment.findById(commentId);
 
-      if (!comment) {
-        return res.status(404).json({ message: "Comment not found" });
-      }
-
-      if (comment.author.toString() !== req.tokenPayload.userId) {
-        return res
-          .status(403)
-          .json({ message: "You are not authorized to delete this comment" });
-      }
-
-      await Comment.findByIdAndDelete(commentId);
-      await Post.findByIdAndUpdate(postId, {
-        $pull: { comments: commentId },
-      });
-
-      res.status(200).json({ message: "Comment deleted successfully" });
-    } catch (error) {
-      next(error);
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
     }
+
+    if (comment.author.toString() !== req.tokenPayload.userId) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to delete this comment" });
+    }
+
+    await Comment.findByIdAndDelete(commentId);
+    await Post.findByIdAndUpdate(postId, {
+      $pull: { comments: commentId },
+    });
+
+    res.status(200).json({ message: "Comment deleted successfully" });
+  } catch (error) {
+    next(error);
   }
-);
+};
+
+router.delete("/:postId/comments/:commentId", isAuthenticated, deleteComment);
 
 module.exports = router;
