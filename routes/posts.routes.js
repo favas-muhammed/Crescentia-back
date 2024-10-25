@@ -1,55 +1,23 @@
 const router = require("express").Router();
 const Post = require("../models/Post.model");
+const Comment = require("../models/Comment.model");
 const path = require("path");
 const { isAuthenticated } = require("../middlewares/route-guard.middleware");
 
-// Configure multer for file storage
-/*const storage = multer.diskStorage({
-  destination: "./uploads/",
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-
-const upload = multer({
-  storage: storage,
-  fileFilter: function (req, file, cb) {
-    const validTypes = ["image/jpeg", "image/png", "image/gif", "video/mp4"];
-    if (validTypes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(null, false);
-    }
-  },
-});*/
-
 // Create post with media
-router.post(
-  "/",
-  isAuthenticated,
-  //upload.single("media"),
-  async (req, res, next) => {
-    try {
-      /*const mediaType = req.file
-        ? req.file.mimetype.startsWith("image/")
-          ? "image"
-          : "video"
-        : "none";
-*/
-      console.log("body", req.body);
-      const newPost = await Post.create({
-        content: req.body.content,
-        // mediaUrl: req.file ? `/uploads/${req.file.filename}` : null,
-        //mediaType,
-        author: req.tokenPayload.userId,
-      });
+router.post("/", isAuthenticated, async (req, res, next) => {
+  try {
+    console.log("body", req.body);
+    const newPost = await Post.create({
+      content: req.body.content,
+      author: req.tokenPayload.userId,
+    });
 
-      res.status(201).json(newPost);
-    } catch (error) {
-      next(error);
-    }
+    res.status(201).json(newPost);
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 // Get all posts
 router.get("/", isAuthenticated, async (req, res, next) => {
@@ -117,6 +85,36 @@ router.delete("/:postId", isAuthenticated, async (req, res, next) => {
         .json({ message: "Post not found or you are not the author" });
     }
     res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Add a comment to a post
+router.post("/:postId/comments", isAuthenticated, async (req, res, next) => {
+  try {
+    const newComment = await Comment.create({
+      content: req.body.content,
+      author: req.tokenPayload.userId,
+      post: req.params.postId,
+    });
+    await Post.findByIdAndUpdate(req.params.postId, {
+      $push: { comments: newComment._id },
+    });
+    res.status(201).json(newComment);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Get comments for a post
+router.get("/:postId/comments", isAuthenticated, async (req, res, next) => {
+  try {
+    const comments = await Comment.find({ post: req.params.postId }).populate(
+      "author",
+      "username email"
+    );
+    res.json(comments);
   } catch (error) {
     next(error);
   }
