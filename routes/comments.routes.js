@@ -4,10 +4,10 @@ const Post = require("../models/Post.model");
 const { isAuthenticated } = require("../middlewares/route-guard.middleware");
 
 // Add a comment to a post
-router.post("/:postId", isAuthenticated, async (req, res, next) => {
+router.post("/:postId/comments", isAuthenticated, async (req, res, next) => {
   try {
     const newComment = await Comment.create({
-      ...req.body,
+      content: req.body.content,
       author: req.tokenPayload.userId,
       post: req.params.postId,
     });
@@ -21,11 +21,11 @@ router.post("/:postId", isAuthenticated, async (req, res, next) => {
 });
 
 // Get comments for a post
-router.get("/:postId", isAuthenticated, async (req, res, next) => {
+router.get("/:postId/comments", isAuthenticated, async (req, res, next) => {
   try {
     const comments = await Comment.find({ post: req.params.postId }).populate(
       "author",
-      "username"
+      "email"
     );
     res.json(comments);
   } catch (error) {
